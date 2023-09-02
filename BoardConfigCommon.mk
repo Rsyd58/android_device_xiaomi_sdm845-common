@@ -8,20 +8,27 @@ BOARD_VENDOR := xiaomi
 
 COMMON_PATH := device/xiaomi/sdm845-common
 
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+BUILD_BROKEN_DUP_RULES := true
+BUILD_BROKEN_ENFORCE_SYSPROP_OWNER := true
+BUILD_BROKEN_MISSING_REQUIRED_MODULES := true
+BUILD_BROKEN_VENDOR_PROPERTY_NAMESPACE := true
+SELINUX_IGNORE_NEVERALLOWS := true
+RELAX_USES_LIBRARY_CHECK := true
+BUILD_BROKEN_PREBUILT_ELF_FILES := true
+
 # Architecture
 TARGET_ARCH := arm64
-TARGET_ARCH_VARIANT := armv8-a
+TARGET_ARCH_VARIANT := armv8-2a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
-TARGET_CPU_VARIANT := generic
-TARGET_CPU_VARIANT_RUNTIME := kryo385
+TARGET_CPU_VARIANT := kryo385
 
 TARGET_2ND_ARCH := arm
-TARGET_2ND_ARCH_VARIANT := armv8-a
+TARGET_2ND_ARCH_VARIANT := armv8-2a
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
-TARGET_2ND_CPU_VARIANT := generic
-TARGET_2ND_CPU_VARIANT_RUNTIME := kryo385
+TARGET_2ND_CPU_VARIANT := kryo385
 
 TARGET_USES_64_BIT_BINDER := true
 
@@ -37,8 +44,10 @@ BOARD_KERNEL_CMDLINE += androidboot.init_fatal_reboot_target=recovery
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
-TARGET_KERNEL_CROSS_COMPILE_PREFIX := $(PWD)/prebuilts/gcc/linux-x86/aarch64/aarch64-elf/bin/aarch64-elf-
-TARGET_KERNEL_CROSS_COMPILE_PREFIX_ARM32 := $(PWD)/prebuilts/gcc/linux-x86/arm/arm-eabi/bin/arm-eabi-
+TARGET_KERNEL_ARCH := arm64
+KERNEL_TOOLCHAIN := $(shell pwd)/prebuilts/clang/host/linux-x86/azure-clang
+TARGET_KERNEL_CONFIG := beryllium_defconfig
+TARGET_KERNEL_CLANG_COMPILE := true
 TARGET_KERNEL_SOURCE := kernel/xiaomi/sdm845
 
 # Platform
@@ -123,7 +132,7 @@ TARGET_RELEASETOOLS_EXTENSIONS := $(COMMON_PATH)
 ENABLE_VENDOR_RIL_SERVICE := true
 
 # Security patch level
-VENDOR_SECURITY_PATCH := 2020-12-01
+VENDOR_SECURITY_PATCH := 2023-01-01
 
 # SELinux
 include device/qcom/sepolicy_vndr/SEPolicy.mk
@@ -157,6 +166,3 @@ WPA_SUPPLICANT_VERSION := VER_0_8_X
 
 # Inherit from the proprietary version
 -include vendor/xiaomi/sdm845-common/BoardConfigVendor.mk
-
-# Broken Rules
-BUILD_BROKEN_DUP_RULES := true
