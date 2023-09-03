@@ -45,7 +45,6 @@ BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 TARGET_KERNEL_ARCH := arm64
-KERNEL_TOOLCHAIN := $(shell pwd)/prebuilts/clang/host/linux-x86/azure-clang
 TARGET_KERNEL_CONFIG := beryllium_defconfig
 TARGET_KERNEL_CLANG_COMPILE := true
 TARGET_KERNEL_SOURCE := kernel/xiaomi/sdm845
