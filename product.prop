@@ -1,14 +1,2 @@
-# Blur
-ro.surface_flinger.supports_background_blur=1
-ro.sf.blurs_are_expensive=1
-persist.sys.sf.disable_blurs=0
-
-# LMKD
-ro.config.low_ram=false
-ro.lmk.log_stats=true
-
 # Shutdown
 ro.build.shutdown_timeout=2
-
-# IORap
-iorapd.readahead.enable=true
