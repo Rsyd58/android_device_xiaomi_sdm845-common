@@ -19,12 +19,12 @@ package org.lineageos.settings.thermal;
 import android.app.ActivityManager;
 import android.app.ActivityManager.StackInfo;
 import android.app.IActivityManager;
-import android.app.TaskStackListener;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -34,28 +34,34 @@ public class ThermalService extends Service {
     private static final String TAG = "ThermalService";
     private static final boolean DEBUG = false;
 
+    private final Handler mHandler = new Handler();
+
     private String mPreviousApp;
     private ThermalUtils mThermalUtils;
+    private ActivityRunnable mActivityRunnable;
     private IActivityManager mIActivityManager;
 
     private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            mPreviousApp = "";
-            mThermalUtils.setDefaultThermalProfile();
+            final String action = intent.getAction();
+            if (Intent.ACTION_SCREEN_ON.equals(action)) {
+                mHandler.postDelayed(mActivityRunnable, 500);
+            } else {
+                mHandler.removeCallbacks(mActivityRunnable);
+                mPreviousApp = "";
+                mThermalUtils.setDefaultThermalProfile();
+            }
         }
     };
 
     @Override
     public void onCreate() {
         if (DEBUG) Log.d(TAG, "Creating service");
-        try {
-            ActivityTaskManager.getService().registerTaskStackListener(mTaskListener);
-        } catch (RemoteException e) {
-            // Do nothing
-        }
         mThermalUtils = new ThermalUtils(this);
+        mActivityRunnable = new ActivityRunnable(this);
         mIActivityManager = ActivityManager.getService();
+        mHandler.postDelayed(mActivityRunnable, 500);
         registerReceiver();
         super.onCreate();
     }
@@ -73,18 +79,25 @@ public class ThermalService extends Service {
 
     private void registerReceiver() {
         IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         this.registerReceiver(mIntentReceiver, filter);
     }
 
-    private final TaskStackListener mTaskListener = new TaskStackListener() {
+    private class ActivityRunnable implements Runnable {
+        private Context context;
+
+        private ActivityRunnable(Context context) {
+            this.context = context;
+        }
+
         @Override
-        public void onTaskStackChanged() {
+        public void run() {
             try {
-                final StackInfo focusedStack = mIActivityManager.getFocusedStackInfo();
+                StackInfo focusedStack = mIActivityManager.getFocusedStackInfo();
                 if (focusedStack != null && focusedStack.topActivity != null) {
-                    ComponentName taskComponentName = focusedStack.topActivity;
-                    String foregroundApp = taskComponentName.getPackageName();
+                    String foregroundApp = focusedStack.topActivity.getPackageName();
+                    mHandler.postDelayed(this, 500);
                     if (!foregroundApp.equals(mPreviousApp)) {
                         mThermalUtils.setThermalProfile(foregroundApp);
                         mPreviousApp = foregroundApp;
@@ -93,5 +106,5 @@ public class ThermalService extends Service {
             } catch (RemoteException ignored) {
             }
         }
-    };
+    }
 }
