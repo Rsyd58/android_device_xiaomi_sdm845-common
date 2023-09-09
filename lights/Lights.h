@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2020 The Android Open Source Project
- * Copyright (C) 2020 The PixelExperience Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +33,9 @@ class Lights : public BnLights {
       ndk::ScopedAStatus getLights(std::vector<HwLight>* types) override;
 
     private:
-      std::mutex mLock;
-      // a map of <id, priority>
-      std::map<int, int> mLights;
+      std::map<int, light_device_t*> mLights;
       std::vector<HwLight> mAvailableLights;
-      // HwLightState in the order of priority
-      std::array<HwLightState, 3> mHwLightStates;
+      int maxLights;
 };
 
 }  // namespace light
