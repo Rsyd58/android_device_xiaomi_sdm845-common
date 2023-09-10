@@ -388,4 +388,18 @@
         <item>com.google.android.gms/com.google.android.gms.nearby.messages.service.NearbyMessagesService</item>
         <item>com.google.android.gms/com.google.android.gms.nearby.discovery.service.DiscoveryService</item>
     </string-array>
+
+    <!-- Stuff mido -->
+    <bool name="config_cameraDoubleTapPowerGestureEnabled">false</bool> 
+    <bool name="config_sf_limitedAlpha">true</bool> 
+    <bool name="config_sf_slowBlur">false</bool> 
+    <bool name="config_smart_battery_available">true</bool> 
+    <bool name="config_ui_enableFadingMarquee">true</bool>
+    <bool name="config_windowIsRound">true</bool>
+    <dimen name="chooser_corner_radius">24dp</dimen>
+    <dimen name="config_buttonCornerRadius">24dp</dimen>
+    <dimen name="config_dialogCornerRadius">24dp</dimen>
+    <dimen name="default_magnifier_corner_radius">24dp</dimen>
+    <dimen name="subtitle_corner_radius">24dp</dimen>
+    <dimen name="tooltip_corner_radius">24dp</dimen>
 </resources>
